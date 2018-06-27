@@ -1,0 +1,26 @@
+{
+  "name": "atlas-github-init",
+  "version": "1.0.0",
+  "description": "A CLI tool for seamlessly uploading local projects to Github and cloning/forking existing Github projects.",
+  "scripts": {
+    "test-server": "mocha --colors --watch --recursive './test/**/*.test.js'",
+    "test": "mocha --colors --recursive './test/**/*.test.js'"
+  },
+  "main": "./src/index.js",
+  "private": true,
+  "keywords": [],
+  "author": "atlassubbed <atlassubbed@gmail.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "engines": {
+    "node": "^10.1.0",
+    "npm": "^6.0.1"
+  }
+}
