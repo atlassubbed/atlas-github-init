@@ -3,17 +3,35 @@
   "version": "1.0.0",
   "description": "A CLI tool for seamlessly uploading local projects to Github and cloning/forking existing Github projects.",
   "scripts": {
-    "test-server": "mocha --colors --watch --recursive './test/**/*.test.js'",
-    "test": "mocha --colors --recursive './test/**/*.test.js'"
+    "test-server": "mocha --colors --watch --recursive './test/**/*.test.js' || rm -rf ./test/tmp-*",
+    "test": "mocha --colors --recursive './test/**/*.test.js' || rm -rf ./test/tmp-*"
   },
   "main": "./src/index.js",
-  "private": true,
-  "keywords": [],
+  "bin": {
+    "atlas": "./src/index.js"
+  },
+  "keywords": [
+    "atlassubbed",
+    "command",
+    "cli",
+    "github",
+    "git",
+    "utils",
+    "utility",
+    "repo",
+    "clone",
+    "fork",
+    "upload"
+  ],
   "author": "atlassubbed <atlassubbed@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
+    "atlas-git-identity": "^1.0.2",
+    "atlas-parallel": "^1.0.0",
     "chai": "^4.1.2",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "rewire": "^4.0.1",
+    "tmp": "0.0.33"
   },
   "os": [
     "darwin",
@@ -22,5 +40,15 @@
   "engines": {
     "node": "^10.1.0",
     "npm": "^6.0.1"
+  },
+  "dependencies": {
+    "@octokit/rest": "^15.9.2",
+    "atlas-basic-logger": "^1.0.0",
+    "atlas-bind-methods": "^1.0.1",
+    "atlas-interactive-shell": "^1.0.0",
+    "atlas-recursive-auth": "^1.0.0",
+    "atlas-repo-info": "^1.0.0",
+    "minimist": "^1.2.0",
+    "uuid": "^3.3.0"
   }
 }
