@@ -44,7 +44,9 @@ module.exports = (input, info, log) => {
     return log("already has origin");
   return auth(github.create)(() => {
     authNew(git.updatePackage)(() => {
-      authNew(git.init)(secure)
+      authNew(git.updateReadme)(() => {
+        authNew(git.init)(secure)        
+      })
     })
   })
 }
