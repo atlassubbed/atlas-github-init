@@ -719,6 +719,54 @@ describe("command", function(){
         expect(calledProvider).to.equal(2);
         expect(didUpdate).to.be.true;
       })
+      it("should try to update the readme with the new auth provider", function(){
+        let calledBind = 0, calledAuth = 0, calledAuthNew = 0, calledProvider = 0
+        let didUpdate = false, git;
+        const repoInfo = {gitRoot: "root", branch: "my-branch", name: "my-repo", remotes: {}}
+        const logger = () => {};
+        revert = command.__set__({
+          bind: inst => {
+            if (++calledBind === 1) git = inst;
+            return inst;
+          },
+          Git: class Git {
+            updateReadme(){}
+          },
+          Github: class Github {
+            clearAuth(){}
+            getAuth(){}
+            setAuth(){}
+          },
+          Authorizer: class Authorizer {
+            getConfig(){}
+            createProvider(configStore, providerCb){
+              if (++calledProvider === 1){
+                expect(providerCb).to.equal(logger)
+                return method => {
+                  calledAuth++;
+                  return cb => cb();
+                }
+              }
+              expect(providerCb).to.not.equal(logger)
+              return method => {
+                if (++calledAuthNew === 1) return cb => cb();
+                expect(method).to.be.a("function")
+                expect(git).to.not.be.undefined;
+                expect(method).to.equal(git.updateReadme);
+                return cb => {
+                  expect(cb).to.be.a("function");
+                  didUpdate = true;
+                }
+              }
+            }
+          }
+        })
+        command({args: [], cmd: "repo", ext: false}, repoInfo, logger)
+        expect(calledAuth).to.equal(1);
+        expect(calledAuthNew).to.equal(2);
+        expect(calledProvider).to.equal(2);
+        expect(didUpdate).to.be.true;
+      })
       it("should push to the github repo with the new auth provider", function(){
         let calledBind = 0, calledAuth = 0, calledAuthNew = 0, calledProvider = 0
         let didInit = false, git;
@@ -749,7 +797,7 @@ describe("command", function(){
               }
               expect(providerCb).to.not.equal(logger)
               return method => {
-                if (++calledAuthNew === 1) return cb => cb();
+                if (++calledAuthNew < 3) return cb => cb();
                 expect(method).to.be.a("function")
                 expect(git).to.not.be.undefined;
                 expect(method).to.equal(git.init);
@@ -763,7 +811,7 @@ describe("command", function(){
         })
         command({args: [], cmd: "repo", ext: false}, repoInfo, logger)
         expect(calledAuth).to.equal(1);
-        expect(calledAuthNew).to.equal(2);
+        expect(calledAuthNew).to.equal(3);
         expect(calledProvider).to.equal(2);
         expect(didInit).to.be.true;
       })
@@ -787,7 +835,7 @@ describe("command", function(){
             getConfig(){}
             createProvider(configStore, providerCb){
               return method => {
-                if (++calledAuth < 4) return cb => cb();
+                if (++calledAuth < 5) return cb => cb();
                 expect(method).to.be.a("function")
                 expect(providerCb).to.equal(logger)
                 expect(github).to.not.be.undefined;
@@ -802,7 +850,7 @@ describe("command", function(){
           }
         })
         command({args: [], cmd: "repo", ext: false}, repoInfo, logger)
-        expect(calledAuth).to.equal(4);
+        expect(calledAuth).to.equal(5);
         expect(didRestrict).to.be.true;
       })
       describe("atlas repo --unsafe", function(){
@@ -834,7 +882,7 @@ describe("command", function(){
             }
           })
           command({args: [], cmd: "repo", ext: false, unsafe: true}, repoInfo, logger)
-          expect(calledAuth).to.equal(3);
+          expect(calledAuth).to.equal(4);
         })
       })
     })

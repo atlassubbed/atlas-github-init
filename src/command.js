@@ -21,9 +21,9 @@ module.exports = (input, info, log) => {
 
   const auth = authorizer.createProvider(configStore, log);
 
-  const secure = () => {
+  const secure = cb => {
     if (!input.unsafe && (!args.length || input.ext))
-      auth(github.restrict)(args[1] || null);
+      auth(github.restrict)(args[1] || null, cb);
   }
 
   // clone existing repo
@@ -44,7 +44,9 @@ module.exports = (input, info, log) => {
     return log("already has origin");
   return auth(github.create)(() => {
     authNew(git.updatePackage)(() => {
-      authNew(git.init)(secure)
+      authNew(git.updateReadme)(() => {
+        authNew(git.init)(secure)        
+      })
     })
   })
 }
