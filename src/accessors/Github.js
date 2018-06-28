@@ -38,7 +38,8 @@ module.exports = class Github {
   }
   create(cb){
     this.cli.repos.create({
-      name: this.name, allow_rebase_merge: false
+      name: this.name,
+      // allow_rebase_merge: false
     }, (err, res) => {
       if (err) return cb(noAuth(err) ? null : err);
       cb(null, true)
