@@ -72,6 +72,10 @@ The `--debug` flag on any subcommand will print more information on failures or 
 atlas repo octocat Spoon-Knife --ext --debug
 ```
 
+#### travis-ci support
+
+If you're using `atlas-npm-init` to initialize your project, you will have travis-ci placeholder badge at the top of your `README.md` file. This will automatically be filled in when you initialize your new Github repository with `atlas repo`. If the placeholder isn't present, then no travis-related content will be added to your `README.md`.
+
 ## todo
 
 #### password for git
