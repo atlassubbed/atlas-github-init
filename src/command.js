@@ -21,9 +21,9 @@ module.exports = (input, info, log) => {
 
   const auth = authorizer.createProvider(configStore, log);
 
-  const secure = cb => {
+  const secure = () => {
     if (!input.unsafe && (!args.length || input.ext))
-      auth(github.restrict)(args[1] || null, cb);
+      auth(github.restrict)(args[1] || null);
   }
 
   // clone existing repo
