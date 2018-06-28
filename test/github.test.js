@@ -356,7 +356,7 @@ describe("Github accessor", function(){
       revert = Github.__set__("GithubClient", () => ({
         repos: {
           create: opts => {
-            expect(opts).to.deep.equal({allow_rebase_merge: false, name: repo})
+            expect(opts).to.deep.equal({name: repo})
             done()
           }
         }
