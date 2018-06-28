@@ -2,6 +2,8 @@
 
 A CLI tool for seamlessly uploading local projects to Github and cloning/forking existing Github projects.
 
+[![Travis](https://img.shields.io/travis/atlassubbed/atlas-github-init.svg)](https://travis-ci.org/atlassubbed/atlas-github-init)
+
 ---
 
 ## install
