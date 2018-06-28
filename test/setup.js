@@ -25,6 +25,15 @@ const makeNodeRepo = cb => {
   })
 }
 
+const makeReadmeRepo = (readme, cb) => {
+  initRepo((err, stat) => {
+    if (err) return cb(err);
+    writeFile(join(stat.root, "README.md"), readme, err => {
+      cb(err, stat);
+    })
+  })
+}
+
 const makeNodeRepoUnstaged = (branch, cb) => {
   makeNodeRepo((err,  stat) => {
     if (err) return cb(err);
@@ -101,6 +110,7 @@ module.exports = {
   makeFullAndBare, 
   makeFullAndEmpty,
   makeNodeRepo,
+  makeReadmeRepo,
   makeFullRepo,
   mkdirp
 }

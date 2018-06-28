@@ -19,6 +19,10 @@ const readPackage = (cwd, cb) => {
   readFile(join(cwd, "package.json"), (err, data) => cb(err, JSON.parse(data)))
 }
 
+const readReadme = (cwd, cb) => {
+  readFile(join(cwd, "README.md"), (err, data) => cb(err, data.toString()))
+}
+
 const push = (remote, branch, cwd, cb) => {
   exec(`git push ${remote} ${branch}`, {cwd}, cb)
 }
@@ -84,6 +88,7 @@ module.exports = {
   isExe,
   makeFolder,
   readPackage,
+  readReadme,
   checkout, 
   diff,
   push,

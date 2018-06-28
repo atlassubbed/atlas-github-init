@@ -5,13 +5,14 @@ const { expect } = require("chai")
 const getRepoInfo = require("atlas-repo-info")
 const Git = rewire("../src/accessors/Git")
 const { run } = require("../src/util")
-const { readPackage, diff, log, fetch, exists, isExe, push, commit } = require("./helpers")
+const { readPackage, readReadme, diff, log, fetch, exists, isExe, push, commit } = require("./helpers")
 const { 
   makeNodeRepoUnstaged, 
   makeCloneAhead,
   makeFullAndBare, 
   makeFullAndEmpty,
   makeNodeRepo,
+  makeReadmeRepo,
   makeFullRepo,
   mkdirp } = require("./setup")
 
@@ -505,5 +506,71 @@ describe("Git accessor", function(){
         })
       })
     })
-  })    
+  })
+  describe("updateReadme", function(){
+    it("should return unauthorized if there is no config", function(done){
+      const git = new Git("root", "repo", "branch", {})
+      git.updateReadme((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.be.undefined;
+        done();
+      })
+    })
+    it("should return unauthorized if there is no username in config", function(done){
+      const git = new Git("root", "repo", "branch", {config: {}})
+      git.updateReadme((err, res) => {
+        expect(err).to.be.null;
+        expect(res).to.be.undefined;
+        done();
+      })
+    })
+    it("should do nothing if there is no travis badge placeholder", function(done){
+      const username = "atlassubbed", store = { config: { username } }
+      makeReadmeRepo("", (err, { name, root: cwd }) => {
+        const git = new Git(cwd, name, "master", store)
+        git.updateReadme((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.be.true;
+          readReadme(cwd, (err, data) => {
+            if (err) return done(err);
+            expect(data).to.equal("")
+            done()
+          })
+        })
+      })
+    })
+    it("should replace the travis badge placeholder with a filled badge", function(done){
+      const username = "atlassubbed", store = { config: { username } }
+      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])\n\n---\n`
+      makeReadmeRepo(data, (err, { name, root: cwd }) => {
+        const git = new Git(cwd, name, "master", store)
+        git.updateReadme((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.be.true;
+          readReadme(cwd, (err, data) => {
+            if (err) return done(err);
+            const expectedData = `# package name\n\n[![Travis](https://img.shields.io/travis/${username}/${name}.svg)](https://travis-ci.org/${username}/${name})\n\n---\n`
+            expect(data).to.equal(expectedData)
+            done()
+          })
+        })
+      })
+    })
+    it("should commit the changes made to the readme", function(done){
+      const username = "atlassubbed", store = { config: { username } }
+      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])\n\n---\n`
+      makeReadmeRepo(data, (err, { name, root: cwd }) => {
+        const git = new Git(cwd, name, "master", store)
+        git.updateReadme((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.be.true;
+          log(cwd, (err, logs) => {
+            if (err) return done(err);
+            expect(logs).to.contain("updates travis-ci badge in README.md")
+            done()
+          })
+        })
+      })
+    })
+  })  
 })
