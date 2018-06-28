@@ -60,4 +60,28 @@ module.exports = class Git {
       })
     })
   }
+  updateReadme(cb){
+    const { gitRoot, name, store: { config } } = this;
+    const username = config && config.username;
+    if (!username) return cb(null);
+    const readmeLoc = join(gitRoot, "README.md");
+    readFile(readmeLoc, (err, data) => {
+      if (err) return cb(null, true);
+      data = data.toString();
+      const travisBadge = "[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])"
+      const filledBadge = travisBadge.replace(/\[username\]/g, username).replace(/\[repo\]/g, name)
+      // replace only the first occurence.
+      const filledData = data.replace(travisBadge, filledBadge)
+      if (filledData === data) return cb(null, true);
+      writeFile(readmeLoc, filledData, err => {
+        if (err) return cb(err);
+        const add = "git add -A"
+        const commit = 'git commit -am "updates travis-ci badge in README.md"'
+        exec(`${add} && ${commit}`, {cwd: gitRoot}, err => {
+          if (err) return cb(err);
+          cb(null, true)
+        })
+      })
+    })
+  }
 }
