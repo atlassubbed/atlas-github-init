@@ -20,11 +20,6 @@ module.exports = (input, info, log) => {
     return log(`${repoUsage}\natlas repo --unsafe? --debug?\natlas logout --debug?`);
 
   const auth = authorizer.createProvider(configStore, log);
-  // const secure = () => !input.unsafe && git.setHooks(input.ext, args[0], args[1], err => {
-  //   if (err) return log(err);
-  //   if (!args.length || input.ext) 
-  //     auth(github.restrict)(args[1] || null);
-  // })
 
   const secure = () => {
     if (!input.unsafe && (!args.length || input.ext))
