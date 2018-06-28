@@ -68,7 +68,7 @@ module.exports = class Git {
     readFile(readmeLoc, (err, data) => {
       if (err) return cb(null, true);
       data = data.toString();
-      const travisBadge = "[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo].svg)"
+      const travisBadge = "[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])"
       const filledBadge = travisBadge.replace(/\[username\]/g, username).replace(/\[repo\]/g, name)
       // replace only the first occurence.
       const filledData = data.replace(travisBadge, filledBadge)
