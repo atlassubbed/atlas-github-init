@@ -541,7 +541,7 @@ describe("Git accessor", function(){
     })
     it("should replace the travis badge placeholder with a filled badge", function(done){
       const username = "atlassubbed", store = { config: { username } }
-      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])\n\n---\n`
+      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo].svg)\n\n---\n`
       makeReadmeRepo(data, (err, { name, root: cwd }) => {
         const git = new Git(cwd, name, "master", store)
         git.updateReadme((err, res) => {
@@ -549,7 +549,7 @@ describe("Git accessor", function(){
           expect(res).to.be.true;
           readReadme(cwd, (err, data) => {
             if (err) return done(err);
-            const expectedData = `# package name\n\n[![Travis](https://img.shields.io/travis/${username}/${name}.svg)](https://travis-ci.org/${username}/${name})\n\n---\n`
+            const expectedData = `# package name\n\n[![Travis](https://img.shields.io/travis/${username}/${name}.svg)](https://travis-ci.org/${username}/${name}.svg)\n\n---\n`
             expect(data).to.equal(expectedData)
             done()
           })
@@ -558,7 +558,7 @@ describe("Git accessor", function(){
     })
     it("should commit the changes made to the readme", function(done){
       const username = "atlassubbed", store = { config: { username } }
-      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo])\n\n---\n`
+      const data = `# package name\n\n[![Travis](https://img.shields.io/travis/[username]/[repo].svg)](https://travis-ci.org/[username]/[repo].svg)\n\n---\n`
       makeReadmeRepo(data, (err, { name, root: cwd }) => {
         const git = new Git(cwd, name, "master", store)
         git.updateReadme((err, res) => {
