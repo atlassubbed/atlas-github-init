@@ -50,7 +50,7 @@ You can clone a repository from Github by specifying an owner and repo:
 atlas repo atlassubbed atlas-npm-init --ext
 ```
 
-The `--ext` (external) flag indicates that you want to fork the repo to your own Github, in addition to cloning it to your local machine. The remotes will be set correctly. In this example, the repo would be created at: `./atlassubbed/atlas-npm-init`. Note that none of these folders need to exist beforehand; they will be created on-the-fly if they don't exist.
+The name of your repo is derived from your folder name. The `--ext` (external) flag indicates that you want to fork the repo to your own Github, in addition to cloning it to your local machine. The remotes will be set correctly. In this example, the repo would be created at: `./atlassubbed/atlas-npm-init`. Note that none of these folders need to exist beforehand; they will be created on-the-fly if they don't exist.
 
 By default, the CLI tool will automatically enable certain `master` branch restrictions and pull-request checks on your newly created (either new or forked) repository. You can disable this with a flag:
 
